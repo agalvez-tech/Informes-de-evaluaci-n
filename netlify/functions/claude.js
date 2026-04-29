@@ -1,4 +1,3 @@
-
 exports.handler = async function(event) {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -22,7 +21,7 @@ exports.handler = async function(event) {
     var https = require('https');
 
     var postData = JSON.stringify({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-5",
       max_tokens: 1000,
       messages: body.messages
     });
