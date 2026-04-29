@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informes de Mercado — RK Palanca Fontestad</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/9.6.1/docx.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #CF731B; --orange-light: #FBF0E6; --orange-dark: #A85A12;
+  --black: #0A0A0A; --white: #FFFFFF;
+  --g1: #1A1A1A; --g2: #555; --g3: #999; --g4: #D0CECC;
+  --gbg: #F7F5F2; --gsurf: #EFEDE9; --border: #E5E2DD;
+}
+body { font-family: 'Montserrat', sans-serif; background: var(--gbg); color: var(--g1); min-height: 100vh; }
+
+
+
+#app { display: block; }
+
+/* ── HEADER ── */
+.hdr { background: var(--black); height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 36px; position: sticky; top: 0; z-index: 100; }
+.logo-wrap { display: flex; align-items: baseline; gap: 10px; }
+.logo-rk { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+.logo-rk em { color: var(--orange); font-style: normal; }
+.logo-sub { font-size: 9px; font-weight: 500; color: #555; letter-spacing: 1.8px; text-transform: uppercase; }
+.hdr-right { display: flex; align-items: center; gap: 16px; }
+.hdr-badge { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; border: 1px solid #2A2A2A; padding: 5px 10px; border-radius: 6px; }
+.logout-btn { font-size: 11px; color: #444; background: none; border: none; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: color 0.2s; }
+.logout-btn:hover { color: #888; }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1140px; margin: 0 auto; padding: 36px 24px; display: grid; grid-template-columns: 400px 1fr; gap: 28px; align-items: start; }
+
+/* ── CARDS ── */
+.card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+.card-hdr { padding: 18px 22px 14px; border-bottom: 1px solid #F2EFE9; display: flex; align-items: center; gap: 10px; }
+.card-icon { width: 34px; height: 34px; background: var(--orange-light); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card-icon svg { width: 16px; height: 16px; }
+.card-title { font-size: 13px; font-weight: 700; color: var(--g1); }
+.card-sub { font-size: 11px; color: var(--g3); margin-top: 1px; }
+.card-body { padding: 20px 22px; }
+
+/* ── UPLOAD ZONES ── */
+.upload-zone { border: 2px dashed var(--g4); border-radius: 12px; padding: 18px 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 14px; }
+.upload-zone:hover { border-color: var(--orange); background: var(--orange-light); }
+.upload-zone.drag { border-color: var(--orange); background: var(--orange-light); }
+.upload-zone.done { border-color: #22C55E; background: #F0FDF4; border-style: solid; }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.uz-icon { font-size: 24px; margin-bottom: 5px; }
+.uz-label { font-size: 12px; font-weight: 700; color: var(--g2); }
+.uz-sub { font-size: 11px; color: var(--g3); margin-top: 2px; }
+.uz-file { font-size: 11px; font-weight: 600; color: #16A34A; margin-top: 5px; min-height: 16px; }
+
+/* ── FIELDS ── */
+.divider { height: 1px; background: #F2EFE9; margin: 16px 0; }
+.field { margin-bottom: 13px; }
+.field label { display: block; font-size: 10px; font-weight: 700; color: var(--g3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+.field input { width: 100%; font-family: 'Montserrat', sans-serif; font-size: 12.5px; color: var(--g1); background: #FAF8F5; border: 1px solid transparent; border-radius: 8px; padding: 9px 12px; outline: none; transition: all 0.2s; }
+.field input:focus { border-color: var(--orange); background: var(--white); }
+.fields-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── STEPS ── */
+.steps { display: flex; gap: 6px; margin-bottom: 20px; }
+.step { flex: 1; background: var(--gsurf); border-radius: 8px; padding: 10px 8px; text-align: center; border: 1px solid transparent; transition: all 0.3s; }
+.step.active { background: var(--orange-light); border-color: var(--orange); }
+.step.done { background: #F0FDF4; border-color: #22C55E; }
+.step-n { font-size: 18px; font-weight: 800; color: var(--g4); }
+.step.active .step-n { color: var(--orange); }
+.step.done .step-n { color: #22C55E; }
+.step-lbl { font-size: 10px; font-weight: 600; color: var(--g3); margin-top: 2px; }
+.step.active .step-lbl { color: #8B4A0C; }
+.step.done .step-lbl { color: #166534; }
+
+/* ── BUTTONS ── */
+.btn-gen { width: 100%; padding: 13px; background: var(--orange); color: var(--white); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; margin-top: 2px; }
+.btn-gen:hover:not(:disabled) { background: var(--orange-dark); transform: translateY(-1px); }
+.btn-gen:active:not(:disabled) { transform: translateY(0); }
+.btn-gen:disabled { background: var(--g4); cursor: not-allowed; transform: none; }
+.spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-dl { display: none; width: 100%; padding: 13px; background: var(--black); color: var(--white); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: background 0.2s; margin-top: 10px; }
+.btn-dl:hover { background: #1A1A1A; }
+.btn-dl.show { display: flex; }
+
+/* ── RIGHT COLUMN ── */
+.right { display: flex; flex-direction: column; gap: 20px; }
+.status { border-radius: 10px; padding: 13px 16px; font-size: 12px; line-height: 1.7; display: flex; gap: 10px; }
+.s-idle    { background: var(--gsurf); color: var(--g3); }
+.s-loading { background: var(--orange-light); color: #8B4A0C; }
+.s-done    { background: #F0FDF4; color: #166534; }
+.s-err     { background: #FEF2F2; color: #991B1B; }
+.s-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.s-idle .s-dot    { background: var(--g4); }
+.s-loading .s-dot { background: var(--orange); animation: pulse 1s ease infinite; }
+.s-done .s-dot    { background: #22C55E; }
+.s-err .s-dot     { background: #EF4444; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+/* ── PREVIEW ── */
+.preview { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+.preview-bar { background: var(--black); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+.preview-bar-title { font-size: 11px; font-weight: 700; color: var(--white); }
+.preview-bar-ref { font-size: 10px; color: var(--orange); font-weight: 700; letter-spacing: 1px; }
+.preview-body { padding: 18px 20px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 16px; }
+.kpi { background: var(--gsurf); border-radius: 10px; padding: 11px 8px; text-align: center; }
+.kpi-val { font-size: 19px; font-weight: 800; color: var(--orange); line-height: 1; }
+.kpi-lbl { font-size: 10px; font-weight: 600; color: var(--g3); margin-top: 4px; }
+.sec-ttl { font-size: 10px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #F2EFE9; font-size: 12px; }
+.row:last-child { border-bottom: none; }
+.row-k { color: var(--g3); }
+.row-v { font-weight: 700; }
+.row-v.hi { color: #DC2626; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+.tag-w { background: #FEF2F2; color: #DC2626; }
+.tag-g { background: #F0FDF4; color: #16A34A; }
+.sc { border-radius: 9px; padding: 10px 13px; border-left: 3px solid; margin-bottom: 8px; }
+.sc-a { background: #FFF7ED; border-color: #F59E0B; }
+.sc-b { background: #F0FDF4; border-color: #22C55E; }
+.sc-c { background: #EFF6FF; border-color: #3B82F6; }
+.sc-lbl { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+.sc-a .sc-lbl { color: #92400E; }
+.sc-b .sc-lbl { color: #166534; }
+.sc-c .sc-lbl { color: #1E40AF; }
+.sc-txt { font-size: 11.5px; color: var(--g2); line-height: 1.5; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--g4); }
+.empty-state .emo { font-size: 34px; margin-bottom: 10px; }
+.empty-state p { font-size: 12.5px; line-height: 1.6; }
+.hidden { display: none; }
+
+@media(max-width: 900px) { .main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+  <div class="hdr">
+    <div class="logo-wrap">
+      <div class="logo-rk">R<em>K</em> PALANCA FONTESTAD</div>
+      <div class="logo-sub">by Realmark Inmobiliaria</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-badge">Generador de Informes IA</div>
+
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- LEFT -->
+    <div>
+      <div class="steps">
+        <div class="step active" id="st1"><div class="step-n">1</div><div class="step-lbl">PDFs</div></div>
+        <div class="step" id="st2"><div class="step-n">2</div><div class="step-lbl">Análisis IA</div></div>
+        <div class="step" id="st3"><div class="step-n">3</div><div class="step-lbl">Informe</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#CF731B" stroke-width="2.2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <div class="card-title">Documentos del inmueble</div>
+            <div class="card-sub">Sube el PDF del CRM y el de Idealista</div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="upload-zone" id="zone1"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="onDrop(event,1)">
+            <input type="file" accept=".pdf" onchange="onFile(this,1)">
+            <div class="uz-icon">📋</div>
+            <div class="uz-label">Informe CRM / Horus</div>
+            <div class="uz-sub">Visitas, gestiones, precios m², feedback</div>
+            <div class="uz-file" id="fn1"></div>
+          </div>
+
+          <div class="upload-zone" id="zone2"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="onDrop(event,2)">
+            <input type="file" accept=".pdf" onchange="onFile(this,2)">
+            <div class="uz-icon">🏠</div>
+            <div class="uz-label">Estadísticas Idealista</div>
+            <div class="uz-sub">Impactos, favoritos, visitas, contactos</div>
+            <div class="uz-file" id="fn2"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="fields-2">
+            <div class="field"><label>Asesor</label><input type="text" id="f-asesor" placeholder="Nombre del asesor"></div>
+            <div class="field"><label>Teléfono</label><input type="text" id="f-tel" placeholder="618 644 856"></div>
+          </div>
+          <div class="field"><label>Email</label><input type="text" id="f-email" placeholder="asesor@inmobiliariapalanca.com"></div>
+
+          <div class="divider"></div>
+
+          <button class="btn-gen" id="btn-gen" onclick="generate()">
+            <span id="btn-txt">Analizar y generar informe</span>
+            <div class="spin" id="spin"></div>
+          </button>
+
+          <a class="btn-dl" id="btn-dl">⬇&nbsp;&nbsp;Descargar informe .docx</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div id="status" class="status s-idle">
+        <div class="s-dot"></div>
+        <span>Sube los dos PDFs (CRM e Idealista) y pulsa <strong>Generar</strong>. La IA analizará los datos y creará el informe corporativo en segundos.</span>
+      </div>
+
+      <div id="preview-empty" class="preview">
+        <div class="empty-state">
+          <div class="emo">📊</div>
+          <p>Aquí aparecerá el resumen<br>de los datos extraídos<br>antes de generar el informe.</p>
+        </div>
+      </div>
+
+      <div id="preview-data" class="preview hidden">
+        <div class="preview-bar">
+          <div class="preview-bar-title">Datos extraídos por la IA</div>
+          <div class="preview-bar-ref" id="pr-ref">—</div>
+        </div>
+        <div class="preview-body">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-val" id="k-imp">—</div><div class="kpi-lbl">Impactos</div></div>
+            <div class="kpi"><div class="kpi-val" id="k-fav">—</div><div class="kpi-lbl">Favoritos</div></div>
+            <div class="kpi"><div class="kpi-val" id="k-vis">—</div><div class="kpi-lbl">Visitas físicas</div></div>
+          </div>
+          <div class="sec-ttl">Inmueble</div>
+          <div class="row"><span class="row-k">Cliente</span><span class="row-v" id="pr-cli">—</span></div>
+          <div class="row"><span class="row-k">Dirección</span><span class="row-v" id="pr-dir">—</span></div>
+          <div class="row"><span class="row-k">Días en mercado</span><span class="row-v" id="pr-dias">—</span></div>
+          <div class="row"><span class="row-k">Precio m² inmueble</span><span class="row-v hi" id="pr-pm2">—</span></div>
+          <div class="row"><span class="row-k">Precio m² cierre zona</span><span class="row-v" id="pr-pz">—</span></div>
+          <div class="divider"></div>
+          <div class="sec-ttl">Feedback de visitas</div>
+          <div class="tag-list" id="pr-tags"></div>
+          <div class="divider"></div>
+          <div class="sec-ttl">Escenarios recomendados</div>
+          <div id="pr-sc"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SECURITY ──────────────────────────────────────────────────────────────────
+const _ek = 'ISB9AAIVQwIRL19dWSgfHDMPcHFlWwsWCAcQK10RFQY7VDojCTgeUiENPjEFGk0OFT4mVgd+QVklOTUiWwBUJSQICCAeEQRWFQwvBA8FAF0TABxHIAhhe0cFJDEYLgEFWSgwX10XGwMXBi0g';
+const _sl = 'RKPalancaFontestad2026Inmobiliaria';
+
+function decodeKey() {
+  const bin = atob(_ek);
+  let key = '';
+  for(let i=0;i<bin.length;i++) key += String.fromCharCode(bin.charCodeAt(i) ^ _sl.charCodeAt(i % _sl.length));
+  return key;
+}
+
+
+
+
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let b64 = [null, null];
+
+// ── FILES ─────────────────────────────────────────────────────────────────────
+function onFile(input, n) { if(input.files[0]) loadFile(input.files[0], n); }
+function onDrop(e, n) {
+  e.preventDefault();
+  document.getElementById('zone'+n).classList.remove('drag');
+  if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0], n);
+}
+function loadFile(file, n) {
+  const r = new FileReader();
+  r.onload = ev => {
+    b64[n-1] = ev.target.result.split(',')[1];
+    document.getElementById('fn'+n).textContent = '✓ ' + file.name;
+    document.getElementById('zone'+n).classList.add('done');
+    updateSteps();
+  };
+  r.readAsDataURL(file);
+}
+function updateSteps() {
+  const both = b64[0] && b64[1];
+  document.getElementById('st1').className = 'step' + (both ? ' done' : ' active');
+  document.getElementById('st2').className = 'step' + (both ? ' active' : '');
+}
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function setStatus(type, msg) {
+  const el = document.getElementById('status');
+  el.className = 'status s-' + type;
+  el.innerHTML = '<div class="s-dot"></div><span>' + msg + '</span>';
+}
+
+// ── GENERATE ──────────────────────────────────────────────────────────────────
+async function generate() {
+  if(!b64[0] || !b64[1]) { setStatus('err','Sube los <strong>dos PDFs</strong> antes de continuar.'); return; }
+
+  const asesor = document.getElementById('f-asesor').value.trim() || 'Asesor RK';
+  const tel    = document.getElementById('f-tel').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+
+  document.getElementById('btn-gen').disabled = true;
+  document.getElementById('btn-txt').textContent = 'Analizando PDFs...';
+  document.getElementById('spin').style.display = 'block';
+  document.getElementById('btn-dl').className = 'btn-dl';
+  setStatus('loading', 'Enviando documentos a Claude para extracción de datos...');
+    console.log('API key starts with:', decodeKey().substring(0,15));
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': decodeKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true',
+        'anthropic-beta': 'pdfs-2024-09-25'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type:'document', source:{type:'base64',media_type:'application/pdf',data:b64[0]} },
+            { type:'document', source:{type:'base64',media_type:'application/pdf',data:b64[1]} },
+            { type:'text', text:`Eres un extractor de datos inmobiliarios. Analiza estos dos PDFs (CRM/Horus e Idealista) y devuelve ÚNICAMENTE un JSON válido sin texto adicional, sin backticks ni markdown.
+
+JSON requerido:
+{
+  "referencia": "05357",
+  "cliente": "Nora Mota",
+  "direccion": "Calle Borriol, 11",
+  "ciudad": "Valencia",
+  "dias_mercado": 45,
+  "fecha_alta": "12/03/2026",
+  "fecha_informe": "28/04/2026",
+  "precio_m2_inmueble": "3.333€",
+  "precio_m2_zona": "2.254€",
+  "impactos_total": "47.183",
+  "visitas_listado": "36.282",
+  "visitas_detalle": "4.037",
+  "favoritos": "355",
+  "contactos_total": "117",
+  "emails": "73",
+  "llamadas": "44",
+  "visitas_fisicas": 26,
+  "gestiones_crm": 325,
+  "interesados": 142,
+  "whatsapps": 89,
+  "feedback_negativo": ["Necesita mucha reforma (mayoría de visitas)","Lo ven caro comparado con la competencia"],
+  "feedback_positivo": ["Varios interesados con posibilidad de oferta","Zona valorada positivamente"],
+  "escenario_a": "Mantener precio actual. Riesgo de quema del inmueble por acumulación de días sin oferta firme.",
+  "escenario_b": "Ajuste al precio de cierre de zona. Activaría notificación automática a todos los usuarios con el inmueble en favoritos.",
+  "escenario_c": "Home Staging virtual o presupuesto de reforma para eliminar el freno perceptivo de la obra.",
+  "diagnostico": "Alta exposición y demanda latente confirmada. La brecha precio/estado actúa como barrera de cierre."
+}
+
+Extrae los valores REALES de los PDFs. Si un dato no aparece, usa el valor del ejemplo como fallback.` }
+          ]
+        })
+      }
+    });
+
+    if(!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'Error de API (código ' + res.status + ')');
+    }
+
+    const json = await res.json();
+    const raw  = json.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    const d    = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    d.asesor = asesor; d.tel = tel; d.email = email;
+
+    setStatus('loading','Datos extraídos. Generando documento corporativo...');
+    renderPreview(d);
+    document.getElementById('st2').className = 'step done';
+    document.getElementById('st3').className = 'step active';
+
+    await buildDocx(d);
+
+    document.getElementById('st3').className = 'step done';
+    setStatus('done','✓ Informe listo para <strong>'+d.cliente+'</strong> · Ref. '+d.referencia+' · '+d.dias_mercado+' días en mercado.');
+
+  } catch(err) {
+    setStatus('err','⚠ ' + err.message);
+    console.error(err);
+  } finally {
+    document.getElementById('btn-gen').disabled = false;
+    document.getElementById('btn-txt').textContent = 'Analizar y generar informe';
+    document.getElementById('spin').style.display = 'none';
+  }
+}
+
+// ── PREVIEW ───────────────────────────────────────────────────────────────────
+function renderPreview(d) {
+  document.getElementById('preview-empty').classList.add('hidden');
+  document.getElementById('preview-data').classList.remove('hidden');
+  document.getElementById('pr-ref').textContent  = 'Ref. '+d.referencia;
+  document.getElementById('pr-cli').textContent  = d.cliente;
+  document.getElementById('pr-dir').textContent  = d.direccion;
+  document.getElementById('pr-dias').textContent = d.dias_mercado+' días';
+  document.getElementById('pr-pm2').textContent  = d.precio_m2_inmueble+'/m²';
+  document.getElementById('pr-pz').textContent   = d.precio_m2_zona+'/m²';
+  document.getElementById('k-imp').textContent   = d.impactos_total;
+  document.getElementById('k-fav').textContent   = d.favoritos;
+  document.getElementById('k-vis').textContent   = d.visitas_fisicas;
+
+  const tags = document.getElementById('pr-tags');
+  tags.innerHTML = '';
+  (d.feedback_negativo||[]).forEach(t=>{const s=document.createElement('span');s.className='tag tag-w';s.textContent=t;tags.appendChild(s);});
+  (d.feedback_positivo||[]).forEach(t=>{const s=document.createElement('span');s.className='tag tag-g';s.textContent=t;tags.appendChild(s);});
+
+  document.getElementById('pr-sc').innerHTML =
+    `<div class="sc sc-a"><div class="sc-lbl">Escenario A — Mantener</div><div class="sc-txt">${d.escenario_a}</div></div>
+     <div class="sc sc-b"><div class="sc-lbl">✦ Escenario B — Recomendado</div><div class="sc-txt">${d.escenario_b}</div></div>
+     <div class="sc sc-c"><div class="sc-lbl">Escenario C — Marketing</div><div class="sc-txt">${d.escenario_c}</div></div>`;
+}
+
+// ── BUILD DOCX ────────────────────────────────────────────────────────────────
+async function buildDocx(d) {
+  const { Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,
+    Header,Footer,AlignmentType,LevelFormat,BorderStyle,WidthType,
+    ShadingType,PageBreak,PageNumber,TabStopType,TabStopPosition } = docx;
+
+  const OR='CF731B',BK='000000',WH='FFFFFF',G1='333333',G2='666666',G3='888888',GBG='F5F5F5',OBG='FBF0E6';
+  const FT='Montserrat',CW=9026,HCW=Math.floor(9026/2);
+
+  const rule = ()=>new Paragraph({spacing:{before:0,after:120},border:{bottom:{style:BorderStyle.SINGLE,size:8,color:OR,space:1}},children:[]});
+  const sp   = (n=120)=>new Paragraph({spacing:{before:0,after:n},children:[]});
+  const h1   = t=>new Paragraph({spacing:{before:320,after:80},children:[new TextRun({text:t,font:FT,size:36,bold:true,color:BK})]});
+  const h2   = t=>new Paragraph({spacing:{before:220,after:70},children:[new TextRun({text:t,font:FT,size:26,bold:true,color:OR})]});
+  const body = (t,ex={})=>new Paragraph({spacing:{before:80,after:80},children:[new TextRun({text:t,font:FT,size:22,color:G1,...ex})]});
+  const bul  = t=>new Paragraph({numbering:{reference:'bul',level:0},spacing:{before:60,after:60},children:[new TextRun({text:t,font:FT,size:22,color:G1})]});
+
+  const hbox=(lbl,val)=>new Table({
+    width:{size:CW,type:WidthType.DXA},columnWidths:[CW],
+    borders:{top:{style:BorderStyle.NONE},bottom:{style:BorderStyle.NONE},left:{style:BorderStyle.SINGLE,size:20,color:OR},right:{style:BorderStyle.NONE},insideH:{style:BorderStyle.NONE},insideV:{style:BorderStyle.NONE}},
+    rows:[new TableRow({children:[new TableCell({width:{size:CW,type:WidthType.DXA},shading:{fill:OBG,type:ShadingType.CLEAR},margins:{top:100,bottom:100,left:200,right:200},children:[new Paragraph({spacing:{before:0,after:0},children:[new TextRun({text:lbl+' ',font:FT,size:22,bold:true,color:OR}),new TextRun({text:val,font:FT,size:22,color:G1})]})]})]})]}
+  );
+
+  const dtable=(headers,rows)=>{
+    const cw=Math.floor(CW/headers.length),b={style:BorderStyle.SINGLE,size:1,color:'DDDDDD'},bs={top:b,bottom:b,left:b,right:b};
+    return new Table({
+      width:{size:CW,type:WidthType.DXA},columnWidths:headers.map(()=>cw),
+      rows:[
+        new TableRow({tableHeader:true,children:headers.map(h=>new TableCell({width:{size:cw,type:WidthType.DXA},shading:{fill:BK,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:120},borders:bs,children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:h.toUpperCase(),font:FT,size:20,bold:true,color:WH})]})]}))}),
+        ...rows.map((row,ri)=>new TableRow({children:row.map(c=>new TableCell({width:{size:cw,type:WidthType.DXA},shading:{fill:ri%2===0?GBG:WH,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:120},borders:bs,children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:c,font:FT,size:20,color:G1})]})]}))}))]
+    });
+  };
+
+  const mkHdr=()=>new Header({children:[
+    new Paragraph({spacing:{before:0,after:0},children:[new TextRun({text:'RK PALANCA FONTESTAD  ·  by Realmark Inmobiliaria',font:FT,size:20,bold:true,color:BK})]}),
+    new Paragraph({spacing:{before:60,after:80},border:{bottom:{style:BorderStyle.SINGLE,size:12,color:OR,space:1}},children:[]})
+  ]});
+
+  const mkFtr=()=>new Footer({children:[new Paragraph({
+    spacing:{before:80,after:0},
+    border:{top:{style:BorderStyle.SINGLE,size:6,color:OR,space:1}},
+    tabStops:[{type:TabStopType.CENTER,position:TabStopPosition.MAX/2},{type:TabStopType.RIGHT,position:TabStopPosition.MAX}],
+    children:[
+      new TextRun({text:"RK Palanca Fontestad · by Realmark Inmobiliaria",font:FT,size:16,color:G3}),
+      new TextRun({text:"\tL'Horta Nord · Valencia · Desde 1976",font:FT,size:16,color:G3}),
+      new TextRun({text:'\tPágina ',font:FT,size:16,color:G3}),
+      new TextRun({children:[PageNumber.CURRENT],font:FT,size:16,color:G3}),
+    ]
+  })]});
+
+  const ctaTbl=()=>new Table({
+    width:{size:CW,type:WidthType.DXA},columnWidths:[CW],
+    rows:[new TableRow({children:[new TableCell({width:{size:CW,type:WidthType.DXA},shading:{fill:BK,type:ShadingType.CLEAR},margins:{top:240,bottom:240,left:300,right:300},children:[
+      new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:120},children:[new TextRun({text:'¿Hablamos de la siguiente decisión?',font:FT,size:28,bold:true,color:WH})]}),
+      new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:80},children:[new TextRun({text:(d.email||'')+'  ·  '+(d.tel||''),font:FT,size:22,color:OR})]}),
+      new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:0},children:[new TextRun({text:"www.inmobiliariapalanca.com  ·  L'Horta Nord, Valencia",font:FT,size:18,color:'AAAAAA'})]}),
+    ]})]})]}
+  );
+
+  const hn=d.cliente.split(' ')[0];
+
+  const cover=[
+    sp(800),
+    new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:200},children:[new TextRun({text:'INFORME DE RESPUESTA DE MERCADO',font:FT,size:20,bold:true,color:OR})]}),
+    new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:120},children:[new TextRun({text:'Inmueble '+d.referencia,font:FT,size:52,bold:true,color:BK})]}),
+    new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:200},children:[new TextRun({text:d.direccion+' · Análisis y Hoja de Ruta de Venta',font:FT,size:24,color:G2})]}),
+    new Paragraph({alignment:AlignmentType.CENTER,spacing:{before:0,after:400},border:{bottom:{style:BorderStyle.SINGLE,size:16,color:OR,space:1}},children:[]}),
+    sp(300),
+    new Table({
+      width:{size:CW,type:WidthType.DXA},columnWidths:[HCW,HCW],
+      borders:{top:{style:BorderStyle.NONE},bottom:{style:BorderStyle.NONE},left:{style:BorderStyle.NONE},right:{style:BorderStyle.NONE},insideH:{style:BorderStyle.NONE},insideV:{style:BorderStyle.NONE}},
+      rows:[
+        new TableRow({children:[
+          new TableCell({width:{size:HCW,type:WidthType.DXA},shading:{fill:GBG,type:ShadingType.CLEAR},margins:{top:120,bottom:120,left:200,right:200},children:[new Paragraph({children:[new TextRun({text:'PREPARADO POR',font:FT,size:16,bold:true,color:G2})]}),new Paragraph({children:[new TextRun({text:'RK Palanca Fontestad',font:FT,size:22,bold:true,color:BK})]})]}),
+          new TableCell({width:{size:HCW,type:WidthType.DXA},shading:{fill:GBG,type:ShadingType.CLEAR},margins:{top:120,bottom:120,left:200,right:200},children:[new Paragraph({children:[new TextRun({text:'FECHA',font:FT,size:16,bold:true,color:G2})]}),new Paragraph({children:[new TextRun({text:d.fecha_informe,font:FT,size:22,bold:true,color:BK})]})]}),
+        ]}),
+        new TableRow({children:[
+          new TableCell({width:{size:HCW,type:WidthType.DXA},shading:{fill:WH,type:ShadingType.CLEAR},margins:{top:120,bottom:120,left:200,right:200},children:[new Paragraph({children:[new TextRun({text:'DESTINATARIA',font:FT,size:16,bold:true,color:G2})]}),new Paragraph({children:[new TextRun({text:d.cliente,font:FT,size:22,bold:true,color:BK})]})]}),
+          new TableCell({width:{size:HCW,type:WidthType.DXA},shading:{fill:WH,type:ShadingType.CLEAR},margins:{top:120,bottom:120,left:200,right:200},children:[new Paragraph({children:[new TextRun({text:'REFERENCIA',font:FT,size:16,bold:true,color:G2})]}),new Paragraph({children:[new TextRun({text:'Inmueble '+d.referencia+' · '+d.dias_mercado+' días',font:FT,size:22,bold:true,color:BK})]})]}),
+        ]}),
+      ]
+    }),
+    sp(600),
+    new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:'"No vendemos casas. Ayudamos a las personas a tomar buenas decisiones inmobiliarias."',font:FT,size:20,italics:true,color:G2})]}),
+    new Paragraph({children:[new PageBreak()]}),
+  ];
+
+  const content=[
+    h1('1. Introducción de Continuidad y Valor'),rule(),
+    body(hn+', tal como acordamos cuando iniciamos este camino juntos, hoy celebramos nuestra Cita de Evaluación.'),
+    body('Este documento es el Informe de Respuesta de Mercado: la prueba objetiva de que hemos cumplido nuestra promesa inicial de posicionar tu casa en '+d.direccion+' frente al 100% de los compradores potenciales.'),
+    sp(100),hbox('Nuestro compromiso:','Garantizar la venta al mejor precio posible, con total seguridad jurídica, administrativa y económica en cada paso del proceso.'),sp(200),
+
+    h1('2. El Impacto de Nuestra Comercialización'),rule(),
+    body('Los resultados que verás son el fruto directo de nuestra inversión y trabajo de difusión masiva. Tu vivienda está totalmente expuesta al mercado.'),
+    body('Hemos logrado una visibilidad excepcional, alcanzando prácticamente a todos los compradores que buscan activamente en tu zona durante estos '+d.dias_mercado+' días de comercialización.'),
+    body("En más de 5.025 viviendas vendidas desde 1976 en L'Horta Nord, sabemos que este nivel de exposición es el punto de partida necesario para una venta de calidad."),sp(200),
+
+    h1('3. Resumen Ejecutivo'),rule(),
+    body('Tras analizar el comportamiento del mercado, estos son los hitos clave del período:'),sp(120),
+    dtable(['Indicador','Resultado','Valoración'],[
+      ['Impactos Totales (Idealista)',d.impactos_total,'Excepcional'],
+      ['Usuarios en Favoritos',d.favoritos,'Alta demanda latente'],
+      ['Visitas Físicas al Inmueble',String(d.visitas_fisicas),'Embudo activo'],
+      ['Interesados CRM',String(d.interesados),'Base cualificada'],
+      ['Precio/m² Inmueble',d.precio_m2_inmueble+'/m²','Por encima del mercado'],
+      ['Precio m² Cierre de Zona',d.precio_m2_zona+'/m²','Referencia real'],
+    ]),
+    sp(180),hbox('Diagnóstico clave:',d.diagnostico),sp(200),
+
+    h1('4. Análisis del Embudo: Dónde Estamos'),rule(),
+    body('El comportamiento de la comercialización muestra una estructura clara que nos permite identificar exactamente en qué punto se produce el obstáculo.'),sp(80),
+    h2('4.1 Alcance Digital — Idealista'),
+    body('La visibilidad es masiva. El anuncio es atractivo y la segmentación es correcta:'),
+    bul(d.visitas_listado+' visitas totales al anuncio'),
+    bul(d.visitas_detalle+' visitas en detalle (interés profundo)'),
+    bul(d.favoritos+' usuarios han marcado la vivienda como «Favorita»'),sp(80),
+    h2('4.2 Gestión en CRM — Interés Real'),
+    body('El interés online se ha convertido en contacto cualificado:'),
+    bul(d.contactos_total+' contactos recibidos ('+d.emails+' emails · '+d.llamadas+' llamadas)'),
+    bul(String(d.visitas_fisicas)+' visitas físicas realizadas al inmueble'),
+    bul(String(d.gestiones_crm)+' gestiones totales · '+String(d.whatsapps||89)+' WhatsApps · '+String(d.interesados)+' interesados identificados'),sp(80),
+    h2('4.3 El «Cuello de Botella» — Diagnóstico Crítico'),
+    body('A pesar del alto interés online, los datos identifican un obstáculo recurrente en las visitas físicas:'),sp(60),
+    ...(d.feedback_negativo||[]).map(f=>bul(f)),
+    sp(100),hbox('Conclusión del embudo:','El mercado quiere tu casa. El precio actual, combinado con el estado de la propiedad, actúa como freno para el cierre. Esto es solucionable con decisión estratégica.'),sp(200),
+
+    h1('5. Escenarios de Decisión: El Mañana'),rule(),
+    body('Basándome en este análisis objetivo, te presento tres vías de acción con proyecciones realistas:'),sp(120),
+    h2('Escenario A — Mantener la Estrategia Actual'),body(d.escenario_a),
+    bul('Continuaremos recibiendo visitas con el mismo perfil de interés'),
+    bul('Riesgo creciente de que el inmueble se «queme» al acumular días sin ofertas firmes'),sp(100),
+    h2('Escenario B — Ajuste Técnico de Precio  ✦ RECOMENDADO'),body(d.escenario_b),
+    bul('Se activa notificación automática a los '+d.favoritos+' usuarios con el inmueble en favoritos'),
+    bul('Mayor ratio de conversión y menor tiempo de venta estimado'),sp(100),
+    h2('Escenario C — Acción de Marketing Disruptiva'),body(d.escenario_c),
+    bul('Los compradores visualizan el potencial real del inmueble reformado'),
+    bul('Puede combinarse con el Escenario B para maximizar el resultado'),sp(200),
+
+    h1('6. Mi Recomendación Técnica'),rule(),
+    body(hn+', mi compromiso es maximizar tu beneficio y, sobre todo, tu seguridad en cada decisión.'),
+    body('Los datos son claros: el mercado tiene un interés enorme en tu casa. Los '+d.favoritos+' usuarios que la tienen en favoritos están esperando una señal para actuar.'),sp(80),
+    hbox('Recomendación principal:','Ajustar el precio hacia los '+d.precio_m2_zona+'/m² (Escenario B). Hagámoslo ahora, mientras el inmueble tiene la máxima visibilidad acumulada, para asegurar el mejor cierre posible.'),
+    sp(120),
+    body('Cualquiera de las decisiones que tomes, las ejecutaremos con la misma dedicación y rigor que hemos demostrado en estos '+d.dias_mercado+' días. Este es nuestro estándar.'),
+    sp(300),ctaTbl(),
+  ];
+
+  const doc=new Document({
+    numbering:{config:[{reference:'bul',levels:[{level:0,format:LevelFormat.BULLET,text:'●',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:500,hanging:300}},run:{color:OR,size:22}}}]}]},
+    sections:[
+      {properties:{page:{size:{width:11906,height:16838},margin:{top:1440,right:1440,bottom:1440,left:1440}}},children:cover},
+      {properties:{page:{size:{width:11906,height:16838},margin:{top:1440,right:1440,bottom:1440,left:1440}}},headers:{default:mkHdr()},footers:{default:mkFtr()},children:content}
+    ]
+  });
+
+  const buf=await Packer.toBuffer(doc);
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const url=URL.createObjectURL(blob);
+  const btn=document.getElementById('btn-dl');
+  btn.href=url;
+  btn.download='Informe_RK_'+d.referencia+'_'+d.cliente.replace(/\s+/g,'_')+'.docx';
+  btn.className='btn-dl show';
+}
+</script>
+</body>
+</html>
