@@ -292,23 +292,15 @@ async function runGenerate() {
   setS("slo", "Enviando documentos a Claude...");
 
   try {
-    var prompt = "Extrae datos de estos dos PDFs inmobiliarios. ";
-    prompt += "Devuelve SOLO JSON valido sin texto extra ni backticks. ";
-    prompt += "Ejemplo de estructura: ";
-    prompt += '{"referencia":"05357","cliente":"Nora Mota","direccion":"Calle Borriol 11",';
-    prompt += '"ciudad":"Valencia","dias_mercado":45,"fecha_alta":"12/03/2026",';
-    prompt += '"fecha_informe":"28/04/2026","precio_m2_inmueble":"3.333 EUR",';
-    prompt += '"precio_m2_zona":"2.254 EUR","impactos_total":"47.183",';
-    prompt += '"visitas_listado":"36.282","visitas_detalle":"4.037","favoritos":"355",';
-    prompt += '"contactos_total":"117","emails":"73","llamadas":"44",';
-    prompt += '"visitas_fisicas":26,"gestiones_crm":325,"interesados":142,"whatsapps":89,';
-    prompt += '"feedback_negativo":["Necesita mucha reforma","Lo ven caro"],';
-    prompt += '"feedback_positivo":["Posibles ofertas","Zona valorada"],';
-    prompt += '"escenario_a":"Mantener precio. Riesgo de quema del inmueble.",';
-    prompt += '"escenario_b":"Ajuste al precio de cierre de zona.",';
-    prompt += '"escenario_c":"Home Staging virtual o presupuesto de reforma.",';
-    prompt += '"diagnostico":"Alta exposicion y demanda latente. Brecha precio genera barrera."}';
-    prompt += " Usa valores REALES de los PDFs.";
+    var prompt = "Analiza estos dos PDFs inmobiliarios (CRM e Idealista) y extrae los datos. ";
+    prompt += "Responde UNICAMENTE con un objeto JSON valido. Sin texto antes ni despues. Sin backticks. ";
+    prompt += "El JSON debe tener estos campos: referencia, cliente, direccion, ciudad, dias_mercado (numero), ";
+    prompt += "fecha_alta, fecha_informe, precio_m2_inmueble, precio_m2_zona, impactos_total, ";
+    prompt += "visitas_listado, visitas_detalle, favoritos, contactos_total, emails, llamadas, ";
+    prompt += "visitas_fisicas (numero), gestiones_crm (numero), interesados (numero), whatsapps (numero), ";
+    prompt += "feedback_negativo (array de strings), feedback_positivo (array de strings), ";
+    prompt += "escenario_a (string), escenario_b (string), escenario_c (string), diagnostico (string). ";
+    prompt += "Usa los valores reales encontrados en los PDFs.";
 
     var response = await fetch("/.netlify/functions/claude", {
       method: "POST",
