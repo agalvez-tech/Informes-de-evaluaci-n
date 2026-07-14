@@ -23398,6 +23398,36 @@ async function buildDocx(d) {
 
   function mkC(fill,lbl,val){return new D.TableCell({width:{size:HCW,type:WT.DXA},shading:{fill:fill,type:SH.CLEAR},margins:{top:120,bottom:120,left:200,right:200},children:[new D.Paragraph({children:[new D.TextRun({text:lbl,font:FT,size:16,bold:true,color:G2})]}),new D.Paragraph({children:[new D.TextRun({text:val,font:FT,size:22,bold:true,color:BK})]})]}); }
 
+  // Sanitize all data fields to avoid null errors
+  d.referencia = d.referencia || 'Sin ref';
+  d.cliente = d.cliente || 'Cliente';
+  d.direccion = d.direccion || 'Sin direccion';
+  d.ciudad = d.ciudad || 'Valencia';
+  d.dias_mercado = d.dias_mercado || 0;
+  d.fecha_informe = d.fecha_informe || new Date().toLocaleDateString('es-ES');
+  d.precio_m2_inmueble = d.precio_m2_inmueble ? String(d.precio_m2_inmueble) : 'N/D';
+  d.precio_m2_zona = d.precio_m2_zona ? String(d.precio_m2_zona) : 'N/D';
+  d.impactos_total = d.impactos_total ? String(d.impactos_total) : '0';
+  d.visitas_listado = d.visitas_listado ? String(d.visitas_listado) : '0';
+  d.visitas_detalle = d.visitas_detalle ? String(d.visitas_detalle) : '0';
+  d.favoritos = d.favoritos ? String(d.favoritos) : '0';
+  d.contactos_total = d.contactos_total ? String(d.contactos_total) : '0';
+  d.emails = d.emails ? String(d.emails) : '0';
+  d.llamadas = d.llamadas ? String(d.llamadas) : '0';
+  d.visitas_fisicas = d.visitas_fisicas || 0;
+  d.gestiones_crm = d.gestiones_crm || 0;
+  d.interesados = d.interesados || 0;
+  d.whatsapps = d.whatsapps || 0;
+  d.feedback_negativo = d.feedback_negativo || [];
+  d.feedback_positivo = d.feedback_positivo || [];
+  d.escenario_a = d.escenario_a || 'Mantener estrategia actual.';
+  d.escenario_b = d.escenario_b || 'Ajuste tecnico de precio.';
+  d.escenario_c = d.escenario_c || 'Accion de marketing disruptiva.';
+  d.diagnostico = d.diagnostico || 'Analisis completado.';
+  d.email = d.email || '';
+  d.tel = d.tel || '';
+  d.asesor = d.asesor || 'Asesor RK';
+
   var hn = d.cliente.split(' ')[0];
 
   var cover = [
