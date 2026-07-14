@@ -84,6 +84,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--g1);mi
 .modal-btn-back:hover{background:var(--sf);color:var(--g1)}
 @media(max-width:900px){.main{grid-template-columns:1fr}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.6.1/build/index.umd.min.js"></script>
 </head>
 <body>
 
@@ -163,6 +164,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--g1);mi
 <script>
 var _b = [null, null];
 var _dl = null;
+var _docxReady = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('f1').addEventListener('change', function() { if (this.files[0]) loadPDF(this.files[0], 1); });
@@ -288,12 +290,8 @@ function doDownload() {
 }
 
 async function buildDocx(d) {
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/docx@9.6.1/build/index.umd.min.js';
-  document.head.appendChild(script);
-  await new Promise(function(resolve, reject) { script.onload = resolve; script.onerror = reject; });
-
-  var D = docx;
+  var D = window.docx;
+  if (!D) { throw new Error('Libreria docx no cargada. Recarga la pagina e intentalo de nuevo.'); }
   var OR='CF731B',BK='000000',WH='FFFFFF',G1='333333',G2='666666',G3='888888',GBG='F5F5F5',OBG='FBF0E6',FT='Montserrat',CW=9026,HCW=4513;
   var BS=D.BorderStyle,WT=D.WidthType,AT=D.AlignmentType,SH=D.ShadingType;
 
